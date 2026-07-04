@@ -25,6 +25,10 @@ TELEGRAM_BOT_TOKEN=xxx
 OPENROUTER_API_KEY=xxx
 OPENROUTER_MODEL=google/gemma-4-31b-it:free
 LOG_LEVEL=info
+WEBHOOK_URL=
+WEBHOOK_SECRET=
+WEBHOOK_PATH=/telegram/webhook
+PORT=3000
 ```
 
 4. Install dependencies:
@@ -46,6 +50,32 @@ bun run dev
 ```
 
 Use `LOG_LEVEL=debug` if you need more local logs while testing.
+
+## Deploy to Render Free Web Service
+
+For local development, leave `WEBHOOK_URL` empty and the bot uses polling.
+
+For Render Free Web Service, use webhook mode:
+
+```text
+Build Command: bun install
+Start Command: bun run start
+Health Check Path: /health
+```
+
+Set these environment variables in Render:
+
+```env
+TELEGRAM_BOT_TOKEN=xxx
+OPENROUTER_API_KEY=xxx
+OPENROUTER_MODEL=google/gemma-4-26b-a4b-it:free
+LOG_LEVEL=info
+WEBHOOK_URL=https://your-render-service.onrender.com/telegram/webhook
+WEBHOOK_SECRET=make-a-long-random-string
+WEBHOOK_PATH=/telegram/webhook
+```
+
+Do not run local polling and the Render webhook deployment at the same time with the same Telegram bot token.
 
 ## How It Works
 
