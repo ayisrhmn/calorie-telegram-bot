@@ -81,6 +81,13 @@ export function createBot() {
         return;
       }
 
+      if (result.parsed.is_food_or_drink === false) {
+        logger.info("Photo rejected because it is not food or drink", {
+          model: result.model,
+          notes: result.parsed.notes
+        });
+      }
+
       logger.info("Calorie estimation completed", {
         model: result.model,
         items: Array.isArray(result.parsed.items) ? result.parsed.items.length : 0,

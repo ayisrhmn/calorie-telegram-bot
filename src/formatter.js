@@ -110,6 +110,10 @@ function getFoodTitle(result, items) {
 }
 
 export function formatCalorieResult(result) {
+  if (result?.is_food_or_drink === false) {
+    return formatNotFoodOrDrink(result?.notes);
+  }
+
   const items = normalizeItems(Array.isArray(result?.items) ? result.items : []);
   const foodTitle = getFoodTitle(result, items);
   const itemLines = items.length
@@ -134,6 +138,20 @@ export function formatCalorieResult(result) {
     `Tingkat akurasi: ${confidence}`,
     "",
     `Catatan: ${notes}`
+  ].join("\n");
+}
+
+export function formatNotFoodOrDrink(notes) {
+  const detail = escapeHtml(
+    getTextValue(notes) || "Aku belum melihat makanan, minuman, snack, atau bahan makanan yang jelas."
+  );
+
+  return [
+    "🍽 <b>Belum Bisa Estimasi Kalori</b>",
+    "",
+    "Kirim foto makanan, minuman, snack, atau bahan makanan ya.",
+    "",
+    `Catatan: ${detail}`
   ].join("\n");
 }
 
