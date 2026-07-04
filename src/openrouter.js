@@ -94,7 +94,7 @@ async function requestModel({ apiKey, model, imageUrl }) {
       headers: {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://github.com/fariz/calorie-telegram-bot",
+        "HTTP-Referer": "https://github.com/ayisrhmn/calorie-telegram-bot",
         "X-Title": "Calorie Telegram Bot"
       },
       timeout: 60000

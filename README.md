@@ -1,10 +1,10 @@
 # Calorie Telegram Bot
 
-Telegram bot MVP for estimating food calories from photos using Bun, Telegraf, and OpenRouter vision models.
+Telegram bot MVP for estimating food calories from photos using Node.js, Telegraf, and OpenRouter vision models.
 
 ## Stack
 
-- Bun
+- Node.js
 - Telegraf
 - OpenRouter API
 - No database
@@ -34,19 +34,19 @@ PORT=3000
 4. Install dependencies:
 
 ```bash
-bun install
+npm install
 ```
 
 5. Run locally with polling:
 
 ```bash
-bun run start
+npm start
 ```
 
 For development with watch mode:
 
 ```bash
-bun run dev
+npm run dev
 ```
 
 Use `LOG_LEVEL=debug` if you need more local logs while testing.
@@ -58,8 +58,8 @@ For local development, leave `WEBHOOK_URL` empty and the bot uses polling.
 For Render Free Web Service, use webhook mode:
 
 ```text
-Build Command: bun install
-Start Command: bun run start
+Build Command: npm install
+Start Command: npm start
 Health Check Path: /health
 ```
 
@@ -118,7 +118,7 @@ calorie-telegram-bot/
 │  └─ formatter.js
 ├─ .gitignore
 ├─ .env.example
-├─ bun.lock
+├─ package-lock.json
 ├─ package.json
 └─ README.md
 ```
