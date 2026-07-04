@@ -2,6 +2,35 @@ import { createServer } from "node:http";
 import { logger, toErrorMeta } from "./logger.js";
 
 const DEFAULT_WEBHOOK_PATH = "/telegram/webhook";
+const PROCESSED_UPDATE_TTL_MS = 10 * 60 * 1000;
+const processedUpdates = new Map();
+
+function cleanupProcessedUpdates() {
+  const now = Date.now();
+
+  for (const [updateId, processedAt] of processedUpdates.entries()) {
+    if (now - processedAt > PROCESSED_UPDATE_TTL_MS) {
+      processedUpdates.delete(updateId);
+    }
+  }
+}
+
+function hasProcessedUpdate(updateId) {
+  if (typeof updateId !== "number") {
+    return false;
+  }
+
+  cleanupProcessedUpdates();
+  return processedUpdates.has(updateId);
+}
+
+function markUpdateProcessed(updateId) {
+  if (typeof updateId !== "number") {
+    return;
+  }
+
+  processedUpdates.set(updateId, Date.now());
+}
 
 function sendJson(response, body, status = 200) {
   response.writeHead(status, {
@@ -79,8 +108,24 @@ export async function startWebhookServer(bot, webhookUrl) {
 
     try {
       const update = await readJsonBody(request);
-      await bot.handleUpdate(update);
+
+      if (hasProcessedUpdate(update.update_id)) {
+        logger.warn("Duplicate Telegram update ignored", {
+          updateId: update.update_id
+        });
+        sendJson(response, { ok: true, duplicate: true });
+        return;
+      }
+
+      markUpdateProcessed(update.update_id);
       sendJson(response, { ok: true });
+
+      bot.handleUpdate(update).catch((error) => {
+        logger.error("Webhook update handling failed after ack", {
+          ...toErrorMeta(error),
+          updateId: update.update_id
+        });
+      });
     } catch (error) {
       logger.error("Webhook update handling failed", toErrorMeta(error));
       sendJson(response, { ok: false }, 500);
