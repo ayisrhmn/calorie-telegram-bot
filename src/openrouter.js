@@ -5,9 +5,9 @@ import { CALORIE_ESTIMATION_PROMPT } from "./prompts.js";
 const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 
 export const FALLBACK_MODELS = [
+  "dots-studio/dots-3-note-preview:free",
   "nex-agi/nex-n2.5-pro:free",
   "nex-agi/nex-n2.5-mini:free",
-  "dots-studio/dots-3-note-preview:free",
   "google/gemma-4-31b-it:free",
   "google/gemma-4-26b-a4b-it:free"
 ];
