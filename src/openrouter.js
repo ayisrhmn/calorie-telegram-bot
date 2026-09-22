@@ -7,8 +7,8 @@ const OPENROUTER_URL = "https://openrouter.ai/api/v1/chat/completions";
 export const FALLBACK_MODELS = [
   "google/gemma-4-31b-it:free",
   "google/gemma-4-26b-a4b-it:free",
-  "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free",
-  "nvidia/nemotron-nano-12b-v2-vl:free"
+  "nvidia/nemotron-nano-12b-v2-vl:free",
+  "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free"
 ];
 
 function getModels() {
@@ -128,6 +128,19 @@ export async function estimateCaloriesFromImage(imageUrl) {
         jsonValid: Boolean(parsed),
         rawLength: rawText.length
       });
+
+      if (!parsed) {
+        errors.push({
+          model,
+          status: 200,
+          message: rawText.length === 0 ? "Empty response body" : "Invalid JSON response"
+        });
+        logger.warn("OpenRouter model returned unusable response, trying fallback", {
+          model,
+          rawLength: rawText.length
+        });
+        continue;
+      }
 
       return {
         model,
